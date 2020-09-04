@@ -7,8 +7,29 @@ import (
 type Chatter struct {
 	username string
 	room *Room
-	conn *websocket.Conn
-	outbox chan string //messages could be strings or could be structs with username, timestamp, string
+	socket *websocket.Conn
+	mailbox chan []byte //changed to []byte cuz that's what it seems like JSON will send?
+}
+
+func (c *Chatter) read() {
+	defer c.socket.Close()
+	for {
+		_, msg, err := c.socket.ReadMessage()
+		if err != nil {
+			return
+		}
+		c.room.forward <- msg
+	}
+}
+
+func (c *Chatter) write() {
+	defer c.socket.Close()
+	for out := range c.mailbox {
+		err := c.socket.WriteMessage(websocket.TextMessage, out)
+		if err != nil {
+			return
+		}
+	}
 }
 
 // when someone goes to chat URL, they choose a room and username
@@ -18,4 +39,6 @@ type Chatter struct {
 // it could also receive stuff on the websocket connection??
 // or just have the room post to a wall and the wall can be displayed in the browser??
 // if its just posting to a wall and reading the wall, then what's the post of 2-way WS instead of HTTP?
+// use WS "send()" method to send text to the server
+// define a handler function on our WebSocket's "onmessage" property to do something with messages sent from the server
 

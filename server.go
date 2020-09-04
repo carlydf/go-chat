@@ -1,6 +1,7 @@
 package chat
 
 import (
+	"log"
 	"net/http"
 )
 
