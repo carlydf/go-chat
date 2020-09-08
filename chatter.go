@@ -24,7 +24,7 @@ func (c *Chatter) read() {
 
 func (c *Chatter) write() {
 	defer c.socket.Close()
-	for out := range c.mailbox {
+	for out := range c.mailbox { //iteration will break when channel is closed
 		err := c.socket.WriteMessage(websocket.TextMessage, out)
 		if err != nil {
 			return

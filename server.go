@@ -1,17 +1,30 @@
 package chat
 
 import (
-	"log"
 	"net/http"
 )
 
-// has a function that runs constantly in the background
-// starts HTTP server with all the common rooms and halls in the house as Room structs
-// use http.FileServer to serve static HTML files?
+var roomNames = []string{
+	"10s",
+	"20s",
+	"30s",
+	"40s",
+	"100s",
+	"200s",
+	"300s",
+	"study-room",
+	"itos",
+	"red-room",
+	"common-room",
+	"balc",
+	"kitchen",
+}
 
-// for name in (list of room names)
-//	r = new room with that name
-//	http.Handle("/chat/"+name, r) ideally if i was hosting this on our web server it would be "web/chat/room-name" as the URL
-//	r.Run()
-
-// HTTP connection would be upgraded to a WS connection in room.go ?? maybe ?? or in the for loop here??
+func serve() {
+	//make an HTTP handler for each room
+	for _, roomName := range roomNames {
+		r := NewRoom(roomName)
+		http.HandleFunc("/chat/" + roomName, r.ServeHTTP) //sets up the default router in the net/http pkg
+	}
+	http.ListenAndServe(":8090", nil) //nil says use default router we just set up
+}
