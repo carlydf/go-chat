@@ -20,7 +20,7 @@ var roomNames = []string{
 	"kitchen",
 }
 
-func Serve() {
+func StartServer() {
 	//make an HTTP handler for each room
 	for _, roomName := range roomNames {
 		r := NewRoom(roomName)
