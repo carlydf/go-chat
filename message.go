@@ -1,4 +1,4 @@
-package chat
+package chatserver
 
 type Message struct {
 	sender string `json: "sender""`
