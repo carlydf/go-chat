@@ -56,7 +56,7 @@ var upgrader = &websocket.Upgrader{
 	ReadBufferSize: messageBufferSize,
 	WriteBufferSize: messageBufferSize}
 
-//this is an http handler, will be HandleFunc-ed in server.go
+//this is an http handler func, turns room into a handler
 func (r *Room) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	// determine whether an incoming req from a diff domain is allowed to connect
 	// what happens when this isn't here?

@@ -1,7 +1,11 @@
 package chatserver
 
 import (
+	"log"
 	"net/http"
+	"path/filepath"
+	"html/template"
+	//"github.com/gorilla/websocket"
 )
 
 var roomNames = []string{
@@ -20,11 +24,44 @@ var roomNames = []string{
 	"kitchen",
 }
 
+//make a struct to help handle html templates
+//this struct satisfies the http.Handler interface
+//thus it can be passed to http.Handle(pattern string, myCustomHandler)
+//http.HandleFunc(pattern string, <Handler func such as ServeHTTP>) would also work, but whatever
+type templateHandler struct {
+	filename string
+	templ *template.Template
+}
+//give it a method that is a handler func
+func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r  *http.Request) {
+	templatePath := filepath.Join("/Users/carlydefrondeville/go/src/chatserver/templates", t.filename)
+	t.templ = template.Must(template.ParseFiles(templatePath))
+	t.templ.Execute(w, nil)
+}
+
 func StartServer() {
+	//make a template struct for the start page html template
+	http.Handle("/", &templateHandler{filename: "index.html"})
 	//make an HTTP handler for each room
 	for _, roomName := range roomNames {
 		r := NewRoom(roomName)
 		http.HandleFunc("/chat/" + roomName, r.ServeHTTP) //sets up the default router in the net/http pkg
 	}
-	http.ListenAndServe(":8090", nil) //nil says use default router we just set up
+	log.Fatal(http.ListenAndServe(":8080", nil))
+}
+
+
+
+
+
+
+
+
+
+
+
+func StartServer1() {
+	http.Handle("/", http.FileServer(http.Dir("./templates")))
+	log.Printf("Serving %s on HTTP port: %s\n", "templates", "3000")
+	log.Fatal(http.ListenAndServe(":3000", nil))
 }

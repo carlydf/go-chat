@@ -8,7 +8,7 @@ type Chatter struct {
 	username string
 	room *Room
 	socket *websocket.Conn
-	mailbox chan []byte //changed to []byte cuz that's what it seems like JSON will send?
+	mailbox chan []byte
 }
 
 func (c *Chatter) read() {
