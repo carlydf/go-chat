@@ -1,0 +1,9 @@
+clicking "sign in" goes to URL "localhost:8080/?"
+    but it should redirect to a room?
+    my friend said something about not having the form submit on button press because
+    i need to code the route to where it submits to
+
+when i go to localhost:8080/chat/10s, terminal says
+    "websocket: the client is not using the websocket protocol: 'upgrade' token not found in 'Connection' header"
+
+

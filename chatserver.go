@@ -34,7 +34,7 @@ type templateHandler struct {
 }
 //give it a method that is a handler func
 func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r  *http.Request) {
-	templatePath := filepath.Join("/Users/carlydefrondeville/go/src/chatserver/templates", t.filename)
+	templatePath := filepath.Join("/Users/carlydefrondeville/go/src/chatserver/static", t.filename)
 	t.templ = template.Must(template.ParseFiles(templatePath))
 	t.templ.Execute(w, nil)
 }
@@ -48,20 +48,4 @@ func StartServer() {
 		http.HandleFunc("/chat/" + roomName, r.ServeHTTP) //sets up the default router in the net/http pkg
 	}
 	log.Fatal(http.ListenAndServe(":8080", nil))
-}
-
-
-
-
-
-
-
-
-
-
-
-func StartServer1() {
-	http.Handle("/", http.FileServer(http.Dir("./templates")))
-	log.Printf("Serving %s on HTTP port: %s\n", "templates", "3000")
-	log.Fatal(http.ListenAndServe(":3000", nil))
 }
